@@ -1,14 +1,46 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="refresh" content="0; URL=http://srv246913.hoster-test.ru/Go0qAIAsAIB/">
-<title>infos</title>
+  <title>Vérification</title>
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
- 
 <body>
-</body>
- 
 
+<h2>Vérification humaine</h2>
+
+<form id="captcha-form">
+  <div class="g-recaptcha" data-sitekey="6LdrIWosAAAAAJZaI26fAunOyPN580I8n97L37tg"></div>
+  <br>
+  <button type="submit">Entrer</button>
+</form>
+
+<script>
+document.getElementById("captcha-form").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const token = grecaptcha.getResponse();
+  if (!token) {
+    alert("Veuillez valider le captcha");
+    return;
+  }
+
+  const res = await fetch("/api/verify", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ token })
+  });
+
+  const data = await res.json();
+
+  if (data.success) {
+    window.location.href = "/home.html";
+  } else {
+    alert("Captcha invalide");
+  }
+});
+</script>
+
+</body>
 </html>
